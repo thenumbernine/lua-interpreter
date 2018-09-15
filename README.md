@@ -1,5 +1,5 @@
 A drop-in interpreter for your scripts.
-Especially useful if you find that debug.debug() function too limited.
+Especially useful if you find that `debug.debug()` function too limited.
 
 Usage:
 
