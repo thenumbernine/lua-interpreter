@@ -3,7 +3,7 @@ Especially useful if you find that debug.debug() function too limited.
 
 Usage:
 
-	`require 'interpreter'(_ENV)`
+	require 'interpreter'(_ENV)
 
 This brings you to a familiar `> ` prompt.
 I don't support incomplete statements just yet.
