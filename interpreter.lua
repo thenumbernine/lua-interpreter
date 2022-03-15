@@ -8,10 +8,13 @@ end
 local function dynamic(k, ...)
 	local writing = select('#', ...) > 0
 	local v = ...
-	-- level 2 is this, level 3 is __index of the metatable
-	for level = 3,math.huge do
-		local info = debug.getinfo(level, 'SlutfnL')
-		if not info then break end
+	-- level 3 is this
+	-- level 4 is __index of the metatable
+	-- level 5 is the xpcall function
+	-- level 6 is the run() function
+	-- I might've missed one in there ...
+	for level = 2,math.huge do
+		if not debug.getinfo(level) then break end
 		for loc=1,math.huge do
 			local k2,v2 = debug.getlocal(level, loc)
 			if not k2 then break end
@@ -27,13 +30,13 @@ end
 
 --[[
 builtin functions:
-	__quit() = ends interpreter execution
+	__cont() = continues execution outside of the interpreter
 --]]
 local function run(env)
 	-- add some env functions
 	local done
-	env = table(env or _ENV)
-	function env.__quit() done = true end
+	env = table(env or (getfenv and getfenv() or _ENV))
+	function env.__cont() done = true end
 	local fenv = setmetatable({}, {
 		__index = function(t,k)
 			-- try for a dynamic local first
