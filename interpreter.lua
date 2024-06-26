@@ -68,11 +68,18 @@ local function run(env)
 		local l = io.read'*l'
 		l = l:gsub('^=', 'return ')
 		
-		-- TODO first try with 'return ' inserted, and if it works then print the results
+		-- first try with 'return ' inserted, and if it works then print the results
+		local f, err
+		xpcall(function()
+			f, err = assert(load('return '..l, nil, nil, fenv))
+		end, function(err)
+		end)
+
 		-- also TODO if an error happens, see if it is multi-line ...
 		-- but in the lua interperter C code, it depends on load() returning LUA_ERRSYNTAX ... but does the Lua side get to see this?
-
-		local f, err = load(l, nil, nil, fenv)
+		if not f then
+			f, err = load(l, nil, nil, fenv)
+		end
 		if not f then
 			io.stderr:write(err, '\n')
 		else
