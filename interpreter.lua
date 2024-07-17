@@ -75,8 +75,40 @@ local function run(env)
 		end, function(err)
 		end)
 
-		-- also TODO if an error happens, see if it is multi-line ...
-		-- but in the lua interperter C code, it depends on load() returning LUA_ERRSYNTAX ... but does the Lua side get to see this?
+		--[[
+		also TODO if an error happens, see if it is multi-line ...
+		but in the lua interperter C code, it depends on load() returning LUA_ERRSYNTAX ... but does the Lua side get to see this?
+		llex.c:
+			lexerror:
+				save:
+					"lexical element too long"
+				luaX_syntaxerror:
+					...
+				inclinenumber:
+					"chunk has too many lines"
+				read_numeral:
+					"malformed number"
+				read_long_string:
+					"unfinished long %s (starting at line %d)"
+				esccheck:
+					gethexa:
+						"hexadecimal digit expected"
+					readutf8esc:
+						"missing '{'"
+						"UTF-8 value too large"
+						"missing '}'"
+				readdecesc:
+					"decimal escape too large"
+				read_string:
+					"unfinished string"
+					"invalid long string delimiter"
+					"invalid escape sequence"
+		ldo.c:
+			...
+		lundump.c:
+			...
+		... so looks like there's no consistent message for ERRSYNTAX
+		--]]
 		if not f then
 			f, err = load(l, nil, nil, fenv)
 		end
