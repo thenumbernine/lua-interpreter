@@ -5,6 +5,8 @@ local function printargs(...)
 	if select('#', ...) > 0 then print(...) end
 end
 
+-- hmm, all this function does is let me reference locals of calling functions.
+-- why do I want that?
 local function dynamic(k, ...)
 	local writing = select('#', ...) > 0
 	local v = ...
@@ -20,8 +22,10 @@ local function dynamic(k, ...)
 			if not k2 then break end
 			if k2 == k then
 				if writing then
+--DEBUG:print('at level', level,'writing', k, v)
 					debug.setlocal(level, loc, v)
 				end
+--DEBUG:print('at level', level,'getting', k, v2)
 				return v2
 			end
 		end
@@ -39,25 +43,32 @@ local function run(env)
 	function env.__cont() done = true end
 	local fenv = setmetatable({}, {
 		__index = function(t,k)
-			-- try for a dynamic local first
+			--[[ try for a dynamic local first ... ?
 			local dynv = dynamic(k)
-			if dynv ~= nil then return dynv end
-			
+			if dynv ~= nil then
+--DEBUG:print('using a dynamic variable for', k)
+				return dynv
+			end
+			--]]
+
 			local envv = env[k]
-			if envv ~= nil then return envv end
+			if envv ~= nil then
+--DEBUG:print('using an env variable for', k)
+				return envv
+			end
 		end,
-	
 		__newindex = function(t,k,v)
-			-- write to a local?
+			--[[ write to a local ... ?
 			local oldv = dynamic(k,v)
 			if oldv ~= nil then return end
-			
+			--]]
+
 			-- write to the external env table?
 			if env[k] ~= nil then
 				env[k] = v
 				return
 			end
-			
+
 			-- write to the local env table
 			rawset(t,k,v)
 		end,
@@ -67,7 +78,7 @@ local function run(env)
 		io.write'> '
 		local l = io.read'*l'
 		l = l:gsub('^=', 'return ')
-		
+
 		-- first try with 'return ' inserted, and if it works then print the results
 		local f, err
 		xpcall(function()
