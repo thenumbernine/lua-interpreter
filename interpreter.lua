@@ -40,6 +40,7 @@ local function run(env)
 	-- add some env functions
 	local done
 	env = table(env or (getfenv and getfenv() or _ENV))
+	env._G = env
 	function env.__cont() done = true end
 	local fenv = setmetatable({}, {
 		__index = function(t,k)
