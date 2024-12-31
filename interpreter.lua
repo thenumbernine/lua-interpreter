@@ -39,9 +39,14 @@ builtin functions:
 local function run(env)
 	-- add some env functions
 	local done
+	--[[ why create and modify a new env table?
 	env = table(env or (getfenv and getfenv() or _ENV))
 	env._G = env
 	function env.__cont() done = true end
+	--]]
+	-- [[ why not just use the original?
+	env = env or _G
+	--]]
 	local fenv = setmetatable({}, {
 		__index = function(t,k)
 			--[[ try for a dynamic local first ... ?
