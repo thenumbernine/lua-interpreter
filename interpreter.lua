@@ -36,7 +36,10 @@ end
 builtin functions:
 	__cont() = continues execution outside of the interpreter
 --]]
-local function run(env)
+local run = setmetatable({
+	title = _VERSION..' interpreter',
+}, {
+__call = function(run, env)
 	-- add some env functions
 	local done
 	--[[ why create and modify a new env table?
@@ -79,7 +82,7 @@ local function run(env)
 			rawset(t,k,v)
 		end,
 	})
-	print(_VERSION..' interpreter')
+	print(run.title)
 	while not done do
 		io.write'> '
 		local l = io.read'*l'
@@ -140,6 +143,6 @@ local function run(env)
 		end
 	end
 	print('quitting interpreter')
-end
+end})
 
 return run
