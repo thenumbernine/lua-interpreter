@@ -1,0 +1,8 @@
+name = "interpreter"
+files = {
+	["README.md"] = "interpreter/README.md",
+	["interpreter.lua"] = "interpreter/interpreter.lua",
+}
+deps = {
+	"ext",
+}
