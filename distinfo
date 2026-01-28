@@ -1,8 +1,14 @@
+--------------------------------------------
+-- generated with dist/build-distinfo.rua --
+--------------------------------------------
+
 name = "interpreter"
 files = {
-	["README.md"] = "interpreter/README.md",
-	["interpreter-dev-1.rockspec"] = "interpreter/interpreter-dev-1.rockspec",
-	["interpreter.lua"] = "interpreter/interpreter.lua",
+	"LICENSE",
+	"README.md",
+	"distinfo",
+	"interpreter-dev-1.rockspec",
+	"interpreter.lua",
 }
 deps = {
 	"ext",
